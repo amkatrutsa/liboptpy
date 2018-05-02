@@ -1,5 +1,7 @@
 import numpy as np
 
+__all__ = ["GradientDescent"]
+
 class _DescentMethod(object):
     def __init__(self):
         self.convergence = []
