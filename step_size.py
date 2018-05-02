@@ -42,3 +42,10 @@ class Backtracking(_StepSize):
             pass
         elif self.rule == "Wolf strong":
             pass
+
+class ExactLineSearch4Quad(_StepSize):
+    def __init__(self, A):
+        self._A = A
+    
+    def get_stepsize(self, h, x):
+        return max(0, -x.dot(self._A.dot(h)) / h.dot(self._A.dot(h)))
