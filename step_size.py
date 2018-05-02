@@ -26,7 +26,7 @@ class Backtracking(_StepSize):
         self.grad = grad
     
     def get_stepsize(self, h, x):
-        alpha = self.par["alpha0"]
+        alpha = self.par["init_alpha"]
         if self.rule == "Armijo":
             rho = self.par["rho"]
             beta = self.par["beta"]
