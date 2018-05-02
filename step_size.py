@@ -28,8 +28,8 @@ class Backtracking(_StepSize):
         if self.rule == "Armijo":
             rho = self.par["rho"]
             beta = self.par["beta"]
-            while self.f(x + alpha * h) >= f(x) + beta * alpha * self.grad(x).dot(h) or \
-                 np.isnan(f(x + alpha * h)):
+            while self.f(x + alpha * h) >= self.f(x) + beta * alpha * self.grad(x).dot(h) or \
+                 np.isnan(self.f(x + alpha * h)):
                 alpha *= rho
                 if alpha < 1e-16:
                     break
