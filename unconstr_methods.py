@@ -1,3 +1,5 @@
+import numpy as np
+
 class DescentMethod(object):
     def __init__(self):
         self.convergence = []
