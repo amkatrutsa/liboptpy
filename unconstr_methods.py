@@ -82,7 +82,6 @@ class BB_method(DescentMethod):
         x_prev = x0.copy()
         self.convergence.append(x_prev)
         iteration = 0
-        print(self._par["init_alpha"])
         while True:
             h = self.get_descent_direction(x_prev)
             if iteration == 0:
