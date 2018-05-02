@@ -1,3 +1,5 @@
+import numpy as np
+
 class _StepSize(object):
     def __init__(self):
         pass
