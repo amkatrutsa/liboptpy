@@ -22,16 +22,16 @@ class Backtracking(_StepSize):
         self.par = kwargs
     
     def assign_function(self, f, grad):
-        self.f = f
-        self.grad = grad
+        self._f = f
+        self._grad = grad
     
     def get_stepsize(self, h, x):
         alpha = self.par["init_alpha"]
         if self.rule == "Armijo":
             rho = self.par["rho"]
             beta = self.par["beta"]
-            while self.f(x + alpha * h) >= self.f(x) + beta * alpha * self.grad(x).dot(h) or \
-                 np.isnan(self.f(x + alpha * h)):
+            while self._f(x + alpha * h) >= self._f(x) + beta * alpha * self._grad(x).dot(h) or \
+                 np.isnan(self._f(x + alpha * h)):
                 alpha *= rho
                 if alpha < 1e-16:
                     break
