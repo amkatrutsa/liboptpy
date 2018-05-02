@@ -2,7 +2,7 @@ import numpy as np
 
 __all__ = ["ConstantStepSize", "Backtracking", "ExactLineSearch4Quad"]
 
-class _StepSize(object):
+class StepSize(object):
     def __init__(self):
         pass
     def get_stepsize(self, h, x):
@@ -11,14 +11,14 @@ class _StepSize(object):
     def assign_function(self, f, grad):
         pass
     
-class ConstantStepSize(_StepSize):
+class ConstantStepSize(StepSize):
     def __init__(self, stepsize):
         self.stepsize = stepsize
     
     def get_stepsize(self, h, x):
         return self.stepsize
     
-class Backtracking(_StepSize):
+class Backtracking(StepSize):
     def __init__(self, rule_type, **kwargs):
         self.rule = rule_type
         self.par = kwargs
@@ -45,9 +45,9 @@ class Backtracking(_StepSize):
         elif self.rule == "Wolf strong":
             pass
 
-class ExactLineSearch4Quad(_StepSize):
+class ExactLineSearch4Quad(StepSize):
     def __init__(self, A):
         self._A = A
     
     def get_stepsize(self, h, x):
-        return max(0, -x.dot(self._A.dot(h)) / h.dot(self._A.dot(h)))
+        return h.dot(h) / h.dot(self._A.dot(h))
