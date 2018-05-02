@@ -1,6 +1,6 @@
 import numpy as np
 
-class DescentMethod(object):
+class _DescentMethod(object):
     def __init__(self):
         self.convergence = []
     
@@ -19,7 +19,7 @@ class DescentMethod(object):
     def get_stepsize(self, h):
         raise NotImplementedError("You have to provide method to set stepsize!")
         
-class GradientDescent(DescentMethod):
+class GradientDescent(_DescentMethod):
     def __init__(self, f, grad, step_size, **kwargs):
         super().__init__()
         self.f = f
