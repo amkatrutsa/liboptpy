@@ -1,7 +1,7 @@
 import numpy as np
 
 __all__ = ["GradientDescent", "Newton", "BB_method", "ConjugateGradientQuad",
-           ""]
+           "ConjugateGradientFR"]
 
 class DescentMethod(object):
     def __init__(self, f, grad, step_size, **kwargs):
