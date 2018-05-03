@@ -36,8 +36,7 @@ class Backtracking(StepSize):
             assert rho < 1, "Decay factor has to be less than 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
-            while self._f(x + alpha * h) >= current_f + beta * alpha * current_grad.dot(h) or \
-                 np.isnan(self._f(x + alpha * h)):
+            while np.isnan(self._f(x + alpha * h)) or self._f(x + alpha * h) >= current_f + beta * alpha * current_grad.dot(h):
                 alpha *= rho
                 if alpha < 1e-16:
                     break
@@ -50,10 +49,21 @@ class Backtracking(StepSize):
             assert 0 < beta1 < beta2 < 1, "Wolfe rule is applcable for betas such that 0 < beta1 < beta2 < 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
-            while (self._f(x + alpha * h) >= current_f + beta1 * alpha * current_grad.dot(h) or np.isnan(self._f(x + alpha * h)) and h.dot(self._grad(x + alpha * h))) < beta2 * h.dot(current_grad):
+            while True: 
+                if np.isnan(self._f(x + alpha * h)):
+                    alpha *= rho
+                    continue
+                else:
+                    if self._f(x + alpha * h) > current_f + beta1 * alpha * current_grad.dot(h):
+                        alpha *= rho
+                        continue
+                    elif h.dot(self._grad(x + alpha * h)) < beta2 * h.dot(current_grad):
+                        alpha *= rho
+                        continue
+                    else:
+                        break
                 if alpha < 1e-10:
                     break
-                alpha *= rho
             return alpha
         elif self.rule == "Goldstein":
             pass
@@ -65,10 +75,21 @@ class Backtracking(StepSize):
             assert 0 < beta1 < beta2 < 1, "Wolfe rule is applcable for betas such that 0 < beta1 < beta2 < 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
-            while (self._f(x + alpha * h) >= current_f + beta1 * alpha * current_grad.dot(h) or np.isnan(self._f(x + alpha * h)) and np.abs(h.dot(self._grad(x + alpha * h)))) > beta2 * np.abs(h.dot(current_grad)):
+            while True: 
+                if np.isnan(self._f(x + alpha * h)):
+                    alpha *= rho
+                    continue
+                else:
+                    if self._f(x + alpha * h) > current_f + beta1 * alpha * current_grad.dot(h):
+                        alpha *= rho
+                        continue
+                    elif np.abs(h.dot(self._grad(x + alpha * h))) > beta2 * np.abs(h.dot(current_grad)):
+                        alpha *= rho
+                        continue
+                    else:
+                        break
                 if alpha < 1e-10:
                     break
-                alpha *= rho
             return alpha
         else:
             raise NotImplementedError("Available rules for backtracking are 'Armijo', 'Goldstein', 'Wolfe' and 'Wolfe strong'")
