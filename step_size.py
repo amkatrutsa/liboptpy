@@ -36,8 +36,14 @@ class Backtracking(StepSize):
             assert rho < 1, "Decay factor has to be less than 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
-            while np.isnan(self._f(x + alpha * h)) or self._f(x + alpha * h) >= current_f + beta * alpha * current_grad.dot(h):
-                alpha *= rho
+            while True:
+                if np.isnan(self._f(x + alpha * h)):
+                    alpha *= rho
+                else:
+                    if self._f(x + alpha * h) >= current_f + beta * alpha * current_grad.dot(h):
+                        alpha *= rho
+                    else:
+                        break
                 if alpha < 1e-16:
                     break
             return alpha
@@ -52,14 +58,11 @@ class Backtracking(StepSize):
             while True: 
                 if np.isnan(self._f(x + alpha * h)):
                     alpha *= rho
-                    continue
                 else:
                     if self._f(x + alpha * h) > current_f + beta1 * alpha * current_grad.dot(h):
                         alpha *= rho
-                        continue
                     elif h.dot(self._grad(x + alpha * h)) < beta2 * h.dot(current_grad):
                         alpha *= rho
-                        continue
                     else:
                         break
                 if alpha < 1e-10:
@@ -78,14 +81,11 @@ class Backtracking(StepSize):
             while True: 
                 if np.isnan(self._f(x + alpha * h)):
                     alpha *= rho
-                    continue
                 else:
                     if self._f(x + alpha * h) > current_f + beta1 * alpha * current_grad.dot(h):
                         alpha *= rho
-                        continue
                     elif np.abs(h.dot(self._grad(x + alpha * h))) > beta2 * np.abs(h.dot(current_grad)):
                         alpha *= rho
-                        continue
                     else:
                         break
                 if alpha < 1e-10:
