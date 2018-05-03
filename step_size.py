@@ -32,18 +32,46 @@ class Backtracking(StepSize):
         if self.rule == "Armijo":
             rho = self.par["rho"]
             beta = self.par["beta"]
-            while self._f(x + alpha * h) >= self._f(x) + beta * alpha * self._grad(x).dot(h) or \
+            assert beta < 0.5, "Armijo rule is applicable for beta less than 0.5"
+            assert rho < 1, "Decay factor has to be less than 1"
+            current_grad = self._grad(x)
+            current_f = self._f(x)
+            while self._f(x + alpha * h) >= current_f + beta * alpha * current_grad.dot(h) or \
                  np.isnan(self._f(x + alpha * h)):
                 alpha *= rho
                 if alpha < 1e-16:
                     break
             return alpha
-        elif self.rule == "Wolf":
-            pass
+        elif self.rule == "Wolfe":
+            rho = self.par["rho"]
+            assert rho < 1, "Decay factor has to be less than 1"
+            beta1 = self.par["beta1"]
+            beta2 = self.par["beta2"]
+            assert 0 < beta1 < beta2 < 1, "Wolfe rule is applcable for betas such that 0 < beta1 < beta2 < 1"
+            current_grad = self._grad(x)
+            current_f = self._f(x)
+            while (self._f(x + alpha * h) >= current_f + beta1 * alpha * current_grad.dot(h) or np.isnan(self._f(x + alpha * h)) and h.dot(self._grad(x + alpha * h))) < beta2 * h.dot(current_grad):
+                if alpha < 1e-10:
+                    break
+                alpha *= rho
+            return alpha
         elif self.rule == "Goldstein":
             pass
-        elif self.rule == "Wolf strong":
-            pass
+        elif self.rule == "Wolfe strong":
+            rho = self.par["rho"]
+            assert rho < 1, "Decay factor has to be less than 1"
+            beta1 = self.par["beta1"]
+            beta2 = self.par["beta2"]
+            assert 0 < beta1 < beta2 < 1, "Wolfe rule is applcable for betas such that 0 < beta1 < beta2 < 1"
+            current_grad = self._grad(x)
+            current_f = self._f(x)
+            while (self._f(x + alpha * h) >= current_f + beta1 * alpha * current_grad.dot(h) or np.isnan(self._f(x + alpha * h)) and np.abs(h.dot(self._grad(x + alpha * h)))) > beta2 * np.abs(h.dot(current_grad)):
+                if alpha < 1e-10:
+                    break
+                alpha *= rho
+            return alpha
+        else:
+            raise NotImplementedError("Available rules for backtracking are 'Armijo', 'Goldstein', 'Wolfe' and 'Wolfe strong'")
 
 class ExactLineSearch4Quad(StepSize):
     def __init__(self, A):
