@@ -95,8 +95,9 @@ class Backtracking(StepSize):
             raise NotImplementedError("Available rules for backtracking are 'Armijo', 'Goldstein', 'Wolfe' and 'Wolfe strong'")
 
 class ExactLineSearch4Quad(StepSize):
-    def __init__(self, A):
+    def __init__(self, A, b):
         self._A = A
+        self._b = b
     
     def get_stepsize(self, h, x):
-        return h.dot(h) / h.dot(self._A.dot(h))
+        return h.dot(self._b - self._A.dot(x)) / h.dot(self._A.dot(h))
