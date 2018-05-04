@@ -71,7 +71,7 @@ class Newton(DescentMethod):
             h = np.linalg.solve(hess, -grad)
         return h
     
-class BB_method(DescentMethod):
+class BarzilaiBorwein(DescentMethod):
     def __init__(self, f, grad, **kwargs):
         super().__init__(f, grad, None, **kwargs)
     
