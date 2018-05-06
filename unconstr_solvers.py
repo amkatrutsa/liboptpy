@@ -1,4 +1,6 @@
 import numpy as np
+import sys
+sys.path.append(".")
 import step_size as ss
 
 __all__ = ["GradientDescent", "Newton", "BB_method", "ConjugateGradientQuad",
