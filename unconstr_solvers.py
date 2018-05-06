@@ -115,7 +115,9 @@ class BarzilaiBorwein(DescentMethod):
         return alpha
     
 class ConjugateGradientQuad(DescentMethod):
-    def __init__(self, A, b):
+    def __init__(self, A, b=None):
+        if b is None:
+            b = np.zeros(A.shape[0])
         f = lambda x: 0.5 * x.dot(A.dot(x)) - b.dot(x)
         grad = lambda x: A.dot(x) - b
         super().__init__(f, grad, None)
