@@ -1,7 +1,4 @@
 import numpy as np
-import sys
-sys.path.append(".")
-import step_size as ss
 
 __all__ = ["GradientDescent", "Newton", "BB_method", "ConjugateGradientQuad",
            "ConjugateGradientFR"]
@@ -164,13 +161,7 @@ class ConjugateGradientFR(DescentMethod):
     
 class AcceleratedGD(DescentMethod):
     def __init__(self, f, grad, step_size, **kwargs):
-        if isinstance(step_size, float):
-            s = ss.ConstantStepSize(step_size)
-        elif isinstance(step_size, ss.Backtracking):
-            s = step_size
-        else:
-            raise ValueError("Unknown type of ste size")
-        super().__init__(f, grad, s, **kwargs)
+        super().__init__(f, grad, step_size, **kwargs)
         
     
     def get_descent_direction(self, x):
