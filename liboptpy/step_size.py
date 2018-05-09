@@ -5,7 +5,7 @@ __all__ = ["ConstantStepSize", "Backtracking", "ExactLineSearch4Quad", "InvIterS
 class StepSize(object):
     def __init__(self):
         pass
-    def get_stepsize(self, h, x, *args, **kwargs):
+    def get_stepsize(self, *args, **kwargs):
         raise NotImplementedError("Method to get current step size has to be implemented!")
         
     def assign_function(self, f, grad):

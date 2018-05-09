@@ -1,37 +1,26 @@
 from .. import base_optimizer as _base
 import numpy as _np
+from ... import step_size as ss
 
 class AcceleratedGD(_base.LineSearchOptimizer):
-    def __init__(self, f, grad, step_size, **kwargs):
+    def __init__(self, f, grad, step_size, momentum_size=None, **kwargs):
         super().__init__(f, grad, step_size, **kwargs)
+        if momentum_size is not None:
+            momentum_size.assign(f, grad)
+        self._momentum_size = momentum_size
+        self._lam0 = 0
+        self._lam1 = 1
         
     def get_direction(self, x):
         return -self._grad(x)
     
-    def solve(self, x0, max_iter=100, tol=1e-6, disp=False):
-        self.convergence = []
-        x_prev = x0.copy()
-        y = x0.copy()
-        k = 1.
-        self.convergence.append(x0)
-        iteration = 0
-        while True:
-            h = self.get_direction(y)
-            alpha = self.get_stepsize(h)
-            x = y + alpha * h
-            y = x + (k - 1) / (k + 2) * (x - x_prev)
-            x_prev = x
-            k += 1
-            self.convergence.append(x)
-            iteration += 1
-            if disp > 1:
-                print("Iteration {}/{}".format(iteration, max_iter))
-                print("Current function val =", self._f(x))
-                print("Current gradient norm = ", _np.linalg.norm(self._grad(x)))
-            if self.check_convergence(tol) or iteration >= max_iter:
-                break
-        if disp:
-            print("Convergence in {} iterations".format(iteration))
-            print("Norm of gradient = {}".format(_np.linalg.norm(self._grad(x))))
-            print("Function value = {}".format(self._f(x)))
-        return x
+    def update_x(self):
+        if self._momentum_size is None:
+            beta = (self._lam0 - 1) / self._lam1
+            t = self._lam0
+            self._lam0 = self._lam1
+            self._lam1 = (1 + _np.sqrt(1 + 4 * t**2)) / 2.
+        self._x_current = self._x_next + beta * (self._x_next - self.convergence[-1])
+        
+    def get_stepsize(self):
+        return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence))

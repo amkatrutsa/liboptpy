@@ -16,3 +16,6 @@ class NewtonMethod(_base.LineSearchOptimizer):
             h = _np.linalg.solve(hess, -grad)
         return h
     
+    def get_stepsize(self):
+        return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence))
+    

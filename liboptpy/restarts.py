@@ -1,5 +1,5 @@
 class Restart(object):
-    def __init__(self, limit_dim):
+    def __init__(self, limit_dim=None):
         self._dim = limit_dim
     
     def __call__(self, num_iter, x):

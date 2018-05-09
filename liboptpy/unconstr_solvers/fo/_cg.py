@@ -19,6 +19,9 @@ class ConjugateGradientFR(_base.LineSearchOptimizer):
             self._h = h
         return h
     
+    def get_stepsize(self):
+        return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence)) 
+    
 class ConjugateGradientQuad(_base.LineSearchOptimizer):
     def __init__(self, A, b=None):
         if b is None:
@@ -42,7 +45,8 @@ class ConjugateGradientQuad(_base.LineSearchOptimizer):
             self._h = h
         return h
     
-    def get_stepsize(self, h):
-        alpha = self._r.dot(self._r) / h.dot(self._A.dot(h))
-        self._alpha = alpha
-        return alpha
+    def get_stepsize(self):
+        h = self._grad_mem[-1]
+        self._alpha = self._r.dot(self._r) / h.dot(self._A.dot(h))
+        return self._alpha
+    
