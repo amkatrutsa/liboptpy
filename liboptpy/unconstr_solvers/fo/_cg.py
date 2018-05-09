@@ -1,13 +1,13 @@
 from .. import base_optimizer as _base
 
-class ConjugateGradientFR(_base.DescentMethod):
+class ConjugateGradientFR(_base.LineSearchOptimizer):
     def __init__(self, f, grad, step_size, restart=None, **kwargs):
         super().__init__(f, grad, step_size, **kwargs)
         if restart is not None:
             restart.assign_function(f, grad)
         self._restart = restart
         
-    def get_descent_direction(self, x):
+    def get_direction(self, x):
         if (len(self.convergence) == 1) or (self._restart is not None and 
                                             self._restart(len(self.convergence), x)):
             h = -self._grad(x)
@@ -19,7 +19,7 @@ class ConjugateGradientFR(_base.DescentMethod):
             self._h = h
         return h
     
-class ConjugateGradientQuad(_base.DescentMethod):
+class ConjugateGradientQuad(_base.LineSearchOptimizer):
     def __init__(self, A, b=None):
         if b is None:
             b = np.zeros(A.shape[0])
@@ -29,7 +29,7 @@ class ConjugateGradientQuad(_base.DescentMethod):
         self._A = A
         self._b = b
         
-    def get_descent_direction(self, x):
+    def get_direction(self, x):
         if (len(self.convergence) == 1):
             h = -self._grad(x)
             self._h = h

@@ -1,6 +1,6 @@
 import numpy as np
 
-class DescentMethod(object):
+class LineSearchOptimizer(object):
     def __init__(self, f, grad, step_size, **kwargs):
         self.convergence = []
         self._f = f
@@ -19,7 +19,7 @@ class DescentMethod(object):
         self.convergence.append(x)
         iteration = 0
         while True:
-            h = self.get_descent_direction(x)
+            h = self.get_direction(x)
             alpha = self.get_stepsize(h)
             x = x + alpha * h
             self.convergence.append(x)
@@ -36,11 +36,15 @@ class DescentMethod(object):
             print("Function value = {}".format(self._f(x)))
         return x
     
-    def get_descent_direction(self, x):
-        raise NotImplementedError("You have to provide method for descent direction!")
+    def get_direction(self, x):
+        raise NotImplementedError("You have to provide method for finding direction!")
         
     def check_convergence(self, tol):
         return np.linalg.norm(self._grad(self.convergence[-1])) < tol
         
     def get_stepsize(self, h):
         return self._step_size.get_stepsize(h, self.convergence[-1], **self._par)
+    
+class TrustRegionOptimizer(object):
+    def __init__(self):
+        raise NotImplementedError("Trust region methods are not implemented yet")

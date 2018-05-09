@@ -1,11 +1,11 @@
 from .. import base_optimizer as _base
 import numpy as _np
 
-class AcceleratedGD(_base.DescentMethod):
+class AcceleratedGD(_base.LineSearchOptimizer):
     def __init__(self, f, grad, step_size, **kwargs):
         super().__init__(f, grad, step_size, **kwargs)
         
-    def get_descent_direction(self, x):
+    def get_direction(self, x):
         return -self._grad(x)
     
     def solve(self, x0, max_iter=100, tol=1e-6, disp=False):
@@ -16,7 +16,7 @@ class AcceleratedGD(_base.DescentMethod):
         self.convergence.append(x0)
         iteration = 0
         while True:
-            h = self.get_descent_direction(y)
+            h = self.get_direction(y)
             alpha = self.get_stepsize(h)
             x = y + alpha * h
             y = x + (k - 1) / (k + 2) * (x - x_prev)

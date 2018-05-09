@@ -1,11 +1,11 @@
 from .. import base_optimizer as _base
 import numpy as _np
 
-class BarzilaiBorweinMethod(_base.DescentMethod):
+class BarzilaiBorweinMethod(_base.LineSearchOptimizer):
     def __init__(self, f, grad, **kwargs):
         super().__init__(f, grad, None, **kwargs)
     
-    def get_descent_direction(self, x):
+    def get_direction(self, x):
         return -self._grad(x)
     
     def solve(self, x0, max_iter=100, tol=1e-6, disp=False):
@@ -14,7 +14,7 @@ class BarzilaiBorweinMethod(_base.DescentMethod):
         self.convergence.append(x_prev)
         iteration = 0
         while True:
-            h = self.get_descent_direction(x_prev)
+            h = self.get_direction(x_prev)
             if iteration == 0:
                 alpha = self._par["init_alpha"]
             else:
