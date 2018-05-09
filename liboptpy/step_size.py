@@ -1,11 +1,11 @@
 import numpy as np
 
-__all__ = ["ConstantStepSize", "Backtracking", "ExactLineSearch4Quad"]
+__all__ = ["ConstantStepSize", "Backtracking", "ExactLineSearch4Quad", "InvIterStepSize", "ScaledInvIterStepSize"]
 
 class StepSize(object):
     def __init__(self):
         pass
-    def get_stepsize(self, h, x):
+    def get_stepsize(self, h, x, *args, **kwargs):
         raise NotImplementedError("Method to get current step size has to be implemented!")
         
     def assign_function(self, f, grad):
@@ -15,8 +15,23 @@ class ConstantStepSize(StepSize):
     def __init__(self, stepsize):
         self.stepsize = stepsize
     
-    def get_stepsize(self, h, x):
+    def get_stepsize(self, h, x, num_iter):
         return self.stepsize
+    
+class InvIterStepSize(StepSize):
+    def __init__(self):
+        pass
+    
+    def get_stepsize(self, h, x, num_iter):
+        return 1. / num_iter
+    
+class ScaledInvIterStepSize(StepSize):
+    def __init__(self):
+        pass
+    
+    def get_stepsize(self, h, x, num_iter):
+        s = 1. / num_iter
+        return s / np.linalg.norm(h)
     
 class Backtracking(StepSize):
     def __init__(self, rule_type, **kwargs):
@@ -27,7 +42,7 @@ class Backtracking(StepSize):
         self._f = f
         self._grad = grad
     
-    def get_stepsize(self, h, x):
+    def get_stepsize(self, h, x, num_iter):
         alpha = self.par["init_alpha"]
         if self.rule == "Armijo":
             rho = self.par["rho"]
@@ -102,5 +117,5 @@ class ExactLineSearch4Quad(StepSize):
         else:
             self._b = b
     
-    def get_stepsize(self, h, x):
+    def get_stepsize(self, h, x, num_iter):
         return h.dot(self._b - self._A.dot(x)) / h.dot(self._A.dot(h))
