@@ -43,7 +43,7 @@ class LineSearchOptimizer(object):
         return np.linalg.norm(self._grad(self.convergence[-1])) < tol
         
     def get_stepsize(self, h):
-        return self._step_size.get_stepsize(h, self.convergence[-1], **self._par)
+        return self._step_size.get_stepsize(h, self.convergence[-1], len(self.convergence), **self._par)
     
 class TrustRegionOptimizer(object):
     def __init__(self):
