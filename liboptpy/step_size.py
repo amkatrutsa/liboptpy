@@ -52,7 +52,7 @@ class Backtracking(StepSize):
             assert rho < 1, "Decay factor has to be less than 1"
             beta1 = self.par["beta1"]
             beta2 = self.par["beta2"]
-            assert 0 < beta1 < beta2 < 1, "Wolfe rule is applcable for betas such that 0 < beta1 < beta2 < 1"
+            assert 0 < beta1 < beta2 < 1, "Wolfe rule is applicable for betas such that 0 < beta1 < beta2 < 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
             while True: 
@@ -75,7 +75,7 @@ class Backtracking(StepSize):
             assert rho < 1, "Decay factor has to be less than 1"
             beta1 = self.par["beta1"]
             beta2 = self.par["beta2"]
-            assert 0 < beta1 < beta2 < 1, "Wolfe rule is applcable for betas such that 0 < beta1 < beta2 < 1"
+            assert 0 < beta1 < beta2 < 1, "Wolfe rule is applicable for betas such that 0 < beta1 < beta2 < 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
             while True: 
