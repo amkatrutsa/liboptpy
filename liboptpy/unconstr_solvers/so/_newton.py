@@ -1,9 +1,5 @@
-from __future__ import print_function
-
-__all__ = ["NewtonMethod"]
-
 import numpy as _np
-from . import base_optimizer as _base
+from .. import base_optimizer as _base
 
 class NewtonMethod(_base.DescentMethod):
     def __init__(self, f, grad, hess, step_size, linsolver=None, **kwargs):
