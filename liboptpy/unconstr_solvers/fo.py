@@ -1,77 +1,19 @@
-import numpy as np
+from __future__ import print_function
 
-__all__ = ["GradientDescent", "Newton", "BB_method", "ConjugateGradientQuad",
-           "ConjugateGradientFR"]
+__all__ = ["GradientDescent", "BarzilaiBorweinMethod", "ConjugateGradientQuad",
+           "ConjugateGradientFR", "AcceleratedGD"]
 
-class DescentMethod(object):
-    def __init__(self, f, grad, step_size, **kwargs):
-        self.convergence = []
-        self._f = f
-        self._grad = grad
-        if step_size is not None:
-            step_size.assign_function(f, grad)
-        self._step_size = step_size
-        self._par = kwargs
-        
-    def get_convergence(self):
-        return self.convergence
-    
-    def solve(self, x0, max_iter=100, tol=1e-6, disp=False):
-        self.convergence = []
-        x = x0.copy()
-        self.convergence.append(x)
-        iteration = 0
-        while True:
-            h = self.get_descent_direction(x)
-            alpha = self.get_stepsize(h)
-            x = x + alpha * h
-            self.convergence.append(x)
-            iteration += 1
-            if disp > 1:
-                print("Iteration {}/{}".format(iteration, max_iter))
-                print("Current function val =", self._f(x))
-                print("Current gradient norm = ", np.linalg.norm(self._grad(x)))
-            if self.check_convergence(tol) or iteration >= max_iter:
-                break
-        if disp:
-            print("Convergence in {} iterations".format(iteration))
-            print("Norm of gradient = {}".format(np.linalg.norm(self._grad(x))))
-            print("Function value = {}".format(self._f(x)))
-        return x
-    
-    def get_descent_direction(self, x):
-        raise NotImplementedError("You have to provide method for descent direction!")
-        
-    def check_convergence(self, tol):
-        return np.linalg.norm(self._grad(self.convergence[-1])) < tol
-        
-    def get_stepsize(self, h):
-        return self._step_size.get_stepsize(h, self.convergence[-1], **self._par)
-        
-class GradientDescent(DescentMethod):
+import numpy as _np
+from . import base_optimizer as _base
+
+class GradientDescent(_base.DescentMethod):
     def __init__(self, f, grad, step_size, **kwargs):
         super().__init__(f, grad, step_size, **kwargs)
     
     def get_descent_direction(self, x):
         return -self._grad(x)
     
-    
-class Newton(DescentMethod):
-    def __init__(self, f, grad, hess, step_size, linsolver=None, **kwargs):
-        super().__init__(f, grad, step_size, **kwargs)
-        self._hess = hess
-        self._linsolver = linsolver
-    
-    def get_descent_direction(self, x):
-        grad = self._grad(x)
-        hess = self._hess(x)
-        if self._linsolver:
-            h = self._linsolver(hess, -grad)
-        else:
-            h = np.linalg.solve(hess, -grad)
-        return h
-    
-class BarzilaiBorwein(DescentMethod):
+class BarzilaiBorweinMethod(_base.DescentMethod):
     def __init__(self, f, grad, **kwargs):
         super().__init__(f, grad, None, **kwargs)
     
@@ -98,12 +40,12 @@ class BarzilaiBorwein(DescentMethod):
             if disp > 1:
                 print("Iteration {}/{}".format(iteration, max_iter))
                 print("Current function val =", self._f(x_next))
-                print("Current gradient norm = ", np.linalg.norm(self._grad(x_next)))
+                print("Current gradient norm = ", _np.linalg.norm(self._grad(x_next)))
             if self.check_convergence(tol) or iteration >= max_iter:
                 break
         if disp:
             print("Convergence in {} iterations".format(iteration))
-            print("Norm of gradient = {}".format(np.linalg.norm(self._grad(x_next))))
+            print("Norm of gradient = {}".format(_np.linalg.norm(self._grad(x_next))))
             print("Function value = {}".format(self._f(x_next)))
         return x_next
     
@@ -114,7 +56,7 @@ class BarzilaiBorwein(DescentMethod):
             alpha = s.dot(s) / g.dot(s)
         return alpha
     
-class ConjugateGradientQuad(DescentMethod):
+class ConjugateGradientQuad(_base.DescentMethod):
     def __init__(self, A, b=None):
         if b is None:
             b = np.zeros(A.shape[0])
@@ -142,7 +84,7 @@ class ConjugateGradientQuad(DescentMethod):
         self._alpha = alpha
         return alpha
     
-class ConjugateGradientFR(DescentMethod):
+class ConjugateGradientFR(_base.DescentMethod):
     def __init__(self, f, grad, step_size, restart=None, **kwargs):
         super().__init__(f, grad, step_size, **kwargs)
         if restart is not None:
@@ -161,11 +103,10 @@ class ConjugateGradientFR(DescentMethod):
             self._h = h
         return h
     
-class AcceleratedGD(DescentMethod):
+class AcceleratedGD(_base.DescentMethod):
     def __init__(self, f, grad, step_size, **kwargs):
         super().__init__(f, grad, step_size, **kwargs)
         
-    
     def get_descent_direction(self, x):
         return -self._grad(x)
     
@@ -188,11 +129,11 @@ class AcceleratedGD(DescentMethod):
             if disp > 1:
                 print("Iteration {}/{}".format(iteration, max_iter))
                 print("Current function val =", self._f(x))
-                print("Current gradient norm = ", np.linalg.norm(self._grad(x)))
+                print("Current gradient norm = ", _np.linalg.norm(self._grad(x)))
             if self.check_convergence(tol) or iteration >= max_iter:
                 break
         if disp:
             print("Convergence in {} iterations".format(iteration))
-            print("Norm of gradient = {}".format(np.linalg.norm(self._grad(x))))
+            print("Norm of gradient = {}".format(_np.linalg.norm(self._grad(x))))
             print("Function value = {}".format(self._f(x)))
         return x
