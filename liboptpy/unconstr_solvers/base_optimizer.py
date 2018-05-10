@@ -24,8 +24,8 @@ class LineSearchOptimizer(object):
             h = self.get_direction(self._x_current)
             self._grad_mem.append(h)
             alpha = self.get_stepsize()
-            self._x_next = self._x_current + alpha * h
-            self.update_x()
+            self._update_x_next(h, alpha)
+            self._update_x_current()
             self.convergence.append(self._x_next)
             iteration += 1
             if disp > 1:
@@ -43,8 +43,11 @@ class LineSearchOptimizer(object):
     def get_direction(self, x):
         raise NotImplementedError("You have to provide method for finding direction!")
         
-    def update_x(self):
+    def _update_x_current(self):
         self._x_current = self._x_next
+        
+    def _update_x_next(self, h, alpha):
+        self._x_next = self._x_current + alpha * h
         
     def check_convergence(self, tol):
         return np.linalg.norm(self._grad(self.convergence[-1])) < tol

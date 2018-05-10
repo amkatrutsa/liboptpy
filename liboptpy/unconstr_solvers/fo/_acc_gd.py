@@ -14,7 +14,7 @@ class AcceleratedGD(_base.LineSearchOptimizer):
     def get_direction(self, x):
         return -self._grad(x)
     
-    def update_x(self):
+    def _update_x_current(self):
         if self._momentum_size is None:
             beta = (self._lam0 - 1) / self._lam1
             t = self._lam0
