@@ -12,3 +12,6 @@ class SubgradientMethod(_base.LineSearchOptimizer):
     
     def get_stepsize(self):
         return self._step_size.get_stepsize(self._grad_mem[-1], self._x_current, len(self.convergence))
+    
+    def _print_info(self):
+        pass
