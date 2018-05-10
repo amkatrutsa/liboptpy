@@ -18,6 +18,13 @@ class ConstantStepSize(StepSize):
     def get_stepsize(self, h, x, num_iter):
         return self.stepsize
     
+class ScaledConstantStepSize(StepSize):
+    def __init__(self, stepsize):
+        self.stepsize = stepsize
+    
+    def get_stepsize(self, h, x, num_iter):
+        return self.stepsize / np.linalg.norm(g)
+    
 class InvIterStepSize(StepSize):
     def __init__(self):
         pass
