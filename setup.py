@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='liboptpy',
     version='0.0.1',
-    description='Implementation of various optimization methods',
+    description='Implementation of various optimization methods for research and study purpose',
     author='Alexandr Katrutsa',
     author_email="aleksandr.katrutsa@phystech.edu",
     packages=['liboptpy', 'liboptpy.unconstr_solvers','liboptpy.unconstr_solvers.fo', 'liboptpy.unconstr_solvers.so'],
