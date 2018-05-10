@@ -26,7 +26,7 @@ class LineSearchOptimizer(object):
             alpha = self.get_stepsize()
             self._update_x_next(h, alpha)
             self._update_x_current()
-            self.convergence.append(self._x_next)
+            self._append_conv()
             iteration += 1
             if disp > 1:
                 print("Iteration {}/{}".format(iteration, max_iter))
@@ -57,6 +57,9 @@ class LineSearchOptimizer(object):
     
     def _print_info(self):
         print("Norm of gradient = {}".format(np.linalg.norm(self._grad(self._x_current))))
+    
+    def _append_conv(self):
+        self.convergence.append(self._x_next)
     
 class TrustRegionOptimizer(object):
     def __init__(self):
