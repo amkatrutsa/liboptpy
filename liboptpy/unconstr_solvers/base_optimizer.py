@@ -31,13 +31,13 @@ class LineSearchOptimizer(object):
             if disp > 1:
                 print("Iteration {}/{}".format(iteration, max_iter))
                 print("Current function val =", self._f(self._x_current))
-                print("Current gradient norm = ", np.linalg.norm(self._grad(self._x_current)))
+                self._print_info()
             if self.check_convergence(tol) or iteration >= max_iter:
                 break
         if disp:
             print("Convergence in {} iterations".format(iteration))
-            print("Norm of gradient = {}".format(np.linalg.norm(self._grad(self._x_current))))
             print("Function value = {}".format(self._f(self._x_current)))
+            self._print_info()
         return self._x_current
     
     def get_direction(self, x):
@@ -54,6 +54,9 @@ class LineSearchOptimizer(object):
         
     def get_stepsize(self):
         raise NotImplementedError("You have to provide method for finding step size!")
+    
+    def _print_info(self):
+        print("Norm of gradient = {}".format(np.linalg.norm(self._grad(self._x_current))))
     
 class TrustRegionOptimizer(object):
     def __init__(self):
