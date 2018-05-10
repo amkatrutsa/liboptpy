@@ -1,4 +1,5 @@
 from .. import base_optimizer as _base
+import numpy as _np
 
 class ConjugateGradientFR(_base.LineSearchOptimizer):
     def __init__(self, f, grad, step_size, restart=None, **kwargs):
@@ -25,7 +26,7 @@ class ConjugateGradientFR(_base.LineSearchOptimizer):
 class ConjugateGradientQuad(_base.LineSearchOptimizer):
     def __init__(self, A, b=None):
         if b is None:
-            b = np.zeros(A.shape[0])
+            b = _np.zeros(A.shape[0])
         f = lambda x: 0.5 * x.dot(A.dot(x)) - b.dot(x)
         grad = lambda x: A.dot(x) - b
         super().__init__(f, grad, None)
