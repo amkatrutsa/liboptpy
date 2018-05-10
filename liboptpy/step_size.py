@@ -23,7 +23,7 @@ class ScaledConstantStepSize(StepSize):
         self.stepsize = stepsize
     
     def get_stepsize(self, h, x, num_iter):
-        return self.stepsize / np.linalg.norm(g)
+        return self.stepsize / np.linalg.norm(h)
     
 class InvIterStepSize(StepSize):
     def __init__(self):
@@ -39,6 +39,13 @@ class ScaledInvIterStepSize(StepSize):
     def get_stepsize(self, h, x, num_iter):
         s = 1. / num_iter
         return s / np.linalg.norm(h)
+    
+class InvSqrootIterStepSize(StepSize):
+    def __init__(self):
+        pass
+    
+    def get_stepsize(self, h, x, num_iter):
+        return 1. / np.sqrt(num_iter)
     
 class Backtracking(StepSize):
     def __init__(self, rule_type, **kwargs):
