@@ -10,7 +10,7 @@ Python library with implementations of optimization methods
 
 ## Examples
 
-1. [Unconstrained smooth and non-smooth optimization](./demo_unconstr_solvers.ipynb)
+1. [Unconstrained smooth and non-smooth optimization](./examples/demo_unconstr_solvers.ipynb)
 2. Constrained optimization
 
 ## Available optimization methods
