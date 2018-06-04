@@ -30,3 +30,4 @@ class ProjectedGD(LineSearchOptimizer):
     
     def _print_info(self):
         print("Difference in function values = {}".format(self._f(self.convergence[-2]) - self._f(self.convergence[-1])))
+        print("Difference in argument = {}".format(np.linalg.norm(self.convergence[-1] - self.convergence[-2])))
