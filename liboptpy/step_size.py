@@ -3,6 +3,9 @@ import numpy as np
 __all__ = ["ConstantStepSize", "Backtracking", "ExactLineSearch4Quad", "InvIterStepSize", "ScaledInvIterStepSize"]
 
 class StepSize(object):
+    '''
+    Base class for all classes for defining step size
+    '''
     def __init__(self):
         pass
     def get_stepsize(self, *args, **kwargs):
@@ -12,6 +15,9 @@ class StepSize(object):
         pass
     
 class ConstantStepSize(StepSize):
+    '''
+    Class represents interface for constant step size 
+    '''
     def __init__(self, stepsize):
         self.stepsize = stepsize
     
@@ -48,6 +54,9 @@ class InvSqrootIterStepSize(StepSize):
         return 1. / np.sqrt(num_iter)
     
 class Backtracking(StepSize):
+    '''
+    Class represents different rules for backtracking search of step size
+    '''
     def __init__(self, rule_type, **kwargs):
         self.rule = rule_type
         self.par = kwargs
