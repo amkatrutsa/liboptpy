@@ -20,7 +20,7 @@ class ProjectedGD(LineSearchOptimizer):
         self._x_next = self._projector(self._x_current + alpha * h)
     
     def check_convergence(self, tol):
-        if np.linalg.norm(self.convergence[-2] - self.convergence[-1]) < tol:
+        if self._f(self.convergence[-2]) - self._f(self.convergence[-1]) < tol:
             return True
         else:
             return False
