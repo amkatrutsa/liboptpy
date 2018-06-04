@@ -1,4 +1,4 @@
-from .. import base_optimizer as _base
+from ... import base_optimizer as _base
 
 class GradientDescent(_base.LineSearchOptimizer):
     def __init__(self, f, grad, step_size, **kwargs):

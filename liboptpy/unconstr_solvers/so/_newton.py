@@ -1,5 +1,5 @@
 import numpy as _np
-from .. import base_optimizer as _base
+from ... import base_optimizer as _base
 
 class NewtonMethod(_base.LineSearchOptimizer):
     def __init__(self, f, grad, hess, step_size, linsolver=None, **kwargs):

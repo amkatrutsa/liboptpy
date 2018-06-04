@@ -1,4 +1,4 @@
-from .. import base_optimizer as _base
+from ... import base_optimizer as _base
 
 class SubgradientMethod(_base.LineSearchOptimizer):
     def __init__(self, f, subgrad, step_size):

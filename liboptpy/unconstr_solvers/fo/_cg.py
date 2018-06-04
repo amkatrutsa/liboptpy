@@ -1,4 +1,4 @@
-from .. import base_optimizer as _base
+from ... import base_optimizer as _base
 import numpy as _np
 
 class ConjugateGradientFR(_base.LineSearchOptimizer):
