@@ -11,7 +11,7 @@ Python library with implementations of optimization methods
 ## Examples
 
 1. [Unconstrained smooth and non-smooth optimization](./examples/demo_unconstr_solvers.ipynb)
-2. Constrained optimization
+2. [Comparison of projected gradient deswcent and Frank-Wolfe method](./examples/demo_simple_set.ipynb)
 
 ## Available optimization methods
 
@@ -40,12 +40,14 @@ Python library with implementations of optimization methods
 ### Available step size
 
 1. Constant
-2. Backtracking
+2. Inverse number on iteration and scaled by gradient norm version
+3. Inverse square root of number of iterationas and scaled by gradient norm version 
+4. Backtracking
     - Armijo rule
     - Wolfe rule
     - Strong Wolfe rule
     - Goldstein rule
-3. Exact line search for quadratic function
+5. Exact line search for quadratic function
 
 ## Contributing
 
