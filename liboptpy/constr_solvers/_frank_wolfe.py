@@ -23,3 +23,6 @@ class FrankWolfe(LineSearchOptimizer):
         
     def get_stepsize(self):
         return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence))
+    
+    def _print_info(self):
+        print("Difference in function values = {}".format(self._f(self.convergence[-2]) - self._f(self.convergence[-1])))
