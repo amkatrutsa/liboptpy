@@ -71,7 +71,7 @@ class ProjectedArmijo(StepSize):
             if np.isnan(self._f(x + alpha * h)):
                     alpha *= self._rho
             else:
-                if self._f(x + alpha * h) >= current_f + self._beta * alpha * h.dot(x - x_next):
+                if self._f(x + alpha * h) >= current_f + self._beta * alpha * h.dot(x_next - x):
                     alpha *= self._rho
                 else:
                     break
