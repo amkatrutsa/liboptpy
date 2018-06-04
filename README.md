@@ -11,7 +11,7 @@ Python library with implementations of optimization methods
 ## Examples
 
 1. [Unconstrained smooth and non-smooth optimization](./examples/demo_unconstr_solvers.ipynb)
-2. [Comparison of projected gradient deswcent and Frank-Wolfe method](./examples/demo_simple_set.ipynb)
+2. [Comparison of projected gradient descent and Frank-Wolfe method](./examples/demo_simple_set.ipynb)
 
 ## Available optimization methods
 
