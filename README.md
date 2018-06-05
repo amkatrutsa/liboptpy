@@ -24,7 +24,7 @@ or
 #### Smooth objective functon
 1. Gradient descent
 2. Nesterov accelerated gradient descent
-3. Newton method
+3. Newton method and inexact (truncated) Newton method with CG as linear solver
 4. Conjugate gradient method
     - for convex quadratic function
     - for non-quadratic function (Fletcher-Reeves method)
