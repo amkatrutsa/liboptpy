@@ -8,6 +8,10 @@ Python library with implementations of optimization methods
 - ```cd liboptpy```
 - ```python setup.py install```
 
+or
+
+```pip install git+https://github.com/amkatrutsa/liboptpy```
+
 ## Examples
 
 1. [Unconstrained smooth and non-smooth optimization](./examples/demo_unconstr_solvers.ipynb)
