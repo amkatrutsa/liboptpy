@@ -88,6 +88,8 @@ class Backtracking(StepSize):
     def __init__(self, rule_type, **kwargs):
         self.rule = rule_type
         self.par = kwargs
+        if self.rule == "Lipschitz" and "eps" not in self.par:
+            self.par["eps"] = 0.
     
     def assign_function(self, f, grad):
         self._f = f
@@ -151,6 +153,23 @@ class Backtracking(StepSize):
                     if self._f(x + alpha * h) > current_f + beta1 * alpha * current_grad.dot(h):
                         alpha *= rho
                     elif np.abs(h.dot(self._grad(x + alpha * h))) > beta2 * np.abs(h.dot(current_grad)):
+                        alpha *= rho
+                    else:
+                        break
+                if alpha < 1e-10:
+                    break
+            return alpha
+        elif self.rule == "Lipschitz":
+            rho = self.par["rho"]
+            assert rho < 1, "Decay factor has to be less than 1"
+            current_grad = self._grad(x)
+            current_f = self._f(x)
+            eps = self.par["eps"]
+            while True: 
+                if np.isnan(self._f(x + alpha * h)):
+                    alpha *= rho
+                else:
+                    if self._f(x + alpha * h) > current_f + alpha * current_grad.dot(h) + alpha * np.linalg.norm(h)**2 / 2 + eps:
                         alpha *= rho
                     else:
                         break
