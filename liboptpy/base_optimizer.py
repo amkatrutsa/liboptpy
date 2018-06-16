@@ -38,7 +38,7 @@ class LineSearchOptimizer(object):
             print("Convergence in {} iterations".format(iteration))
             print("Function value = {}".format(self._f(self._x_current)))
             self._print_info()
-        return self._x_current
+        return self._get_result_x()
     
     def get_direction(self, x):
         raise NotImplementedError("You have to provide method for finding direction!")
@@ -60,6 +60,9 @@ class LineSearchOptimizer(object):
     
     def _append_conv(self):
         self.convergence.append(self._x_next)
+        
+    def _get_result_x(self):
+        return self._x_current
     
 class TrustRegionOptimizer(object):
     def __init__(self):
