@@ -1,4 +1,5 @@
 from ... import base_optimizer as _base
+import numpy as np
 
 class SubgradientMethod(_base.LineSearchOptimizer):
     def __init__(self, f, subgrad, step_size):
