@@ -52,35 +52,7 @@ class InvSqrootIterStepSize(StepSize):
     
     def get_stepsize(self, h, x, num_iter, *args):
         return 1. / np.sqrt(num_iter)
-    
-class ProjectedArmijo(StepSize):
-    def __init__(self, rho, beta, init_alpha):
-        self._rho = rho
-        self._beta = beta
-        self._init_alpha = init_alpha
         
-    def assign_function(self, f, grad):
-        self._f = f
-        self._grad = grad
-    
-    def get_stepsize(self, h, x, num_iter):
-        alpha = self._init_alpha
-        x_next = self._proj(x + self._init_alpha * h)
-        current_f = self._f(x)
-        while True:
-            if np.isnan(self._f(x + alpha * h)):
-                    alpha *= self._rho
-            else:
-                if self._f(x + alpha * h) >= current_f + self._beta * alpha * h.dot(x_next - x):
-                    alpha *= self._rho
-                else:
-                    break
-            if alpha < 1e-16:
-                break
-            x_next = self._proj(x + alpha * h)
-        return alpha
-        
-    
 class Backtracking(StepSize):
     '''
     Class represents different rules for backtracking search of step size
