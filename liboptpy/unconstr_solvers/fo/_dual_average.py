@@ -19,8 +19,8 @@ class DualAveraging(_base.LineSearchOptimizer):
     def get_stepsize(self):
         return self._step_size.get_stepsize(self._grad_mem[-1], self._x_current, len(self.convergence))
         
-    def _update_x_next(self, h, alpha):
-        self._x_next = self.convergence[0] + alpha * h
+    def _f_update_x_next(self, x, alpha, h):
+        return self.convergence[0] + alpha * h
     
     def _append_conv(self):
         self.convergence.append(self._x_current)

@@ -8,16 +8,15 @@ class ProjectedGD(LineSearchOptimizer):
     Class represents projected gradient method
     '''
     
-    def __init__(self, f, grad, projector, step_size=ProjectedArmijo(rho=0.5, beta=0.1, init_alpha=1.)):
+    def __init__(self, f, grad, projector, step_size):
         super().__init__(f, grad, step_size)
         self._projector = projector
-        self._step_size._proj = projector
         
     def get_direction(self, x):
         return -self._grad(x)
     
-    def _update_x_next(self, h, alpha):
-        self._x_next = self._projector(self._x_current + alpha * h)
+    def _f_update_x_next(self, x, alpha, h):
+        return self._projector(x + alpha * h)
     
     def check_convergence(self, tol):
         if self._f(self.convergence[-2]) - self._f(self.convergence[-1]) < tol:
