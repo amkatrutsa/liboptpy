@@ -7,7 +7,7 @@ class LineSearchOptimizer(object):
         self._f = f
         self._grad = grad
         if step_size is not None:
-            step_size.assign_function(f, grad)
+            step_size.assign_function(f, grad, self._f_update_x_next)
         self._step_size = step_size
         self._par = kwargs
         self._grad_mem = deque(maxlen=memory_size)
@@ -23,8 +23,8 @@ class LineSearchOptimizer(object):
         while True:
             h = self.get_direction(self._x_current)
             self._grad_mem.append(h)
-            alpha = self.get_stepsize()
-            self._update_x_next(h, alpha)
+            self._alpha = self.get_stepsize()
+            self._update_x_next()
             self._update_x_current()
             self._append_conv()
             iteration += 1
@@ -32,7 +32,10 @@ class LineSearchOptimizer(object):
                 print("Iteration {}/{}".format(iteration, max_iter))
                 print("Current function val =", self._f(self._x_current))
                 self._print_info()
-            if self.check_convergence(tol) or iteration >= max_iter:
+            if self.check_convergence(tol):
+                break
+            if iteration >= max_iter:
+                print("Maximum iteration exceeds!")
                 break
         if disp:
             print("Convergence in {} iterations".format(iteration))
@@ -46,8 +49,11 @@ class LineSearchOptimizer(object):
     def _update_x_current(self):
         self._x_current = self._x_next
         
-    def _update_x_next(self, h, alpha):
-        self._x_next = self._x_current + alpha * h
+    def _update_x_next(self):
+        self._x_next = self._f_update_x_next(self._x_current, self._alpha, self._grad_mem[-1])
+        
+    def _f_update_x_next(self, x, alpha, h):
+        return x + alpha * h
         
     def check_convergence(self, tol):
         return np.linalg.norm(self._grad(self.convergence[-1])) < tol
