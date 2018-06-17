@@ -11,7 +11,7 @@ class StepSize(object):
     def get_stepsize(self, *args, **kwargs):
         raise NotImplementedError("Method to get current step size has to be implemented!")
         
-    def assign_function(self, f, grad):
+    def assign_function(self, f, grad, *args):
         pass
     
 class ConstantStepSize(StepSize):
@@ -21,28 +21,28 @@ class ConstantStepSize(StepSize):
     def __init__(self, stepsize):
         self.stepsize = stepsize
     
-    def get_stepsize(self, h, x, num_iter):
+    def get_stepsize(self, h, x, num_iter, *args):
         return self.stepsize
     
 class ScaledConstantStepSize(StepSize):
     def __init__(self, stepsize):
         self.stepsize = stepsize
     
-    def get_stepsize(self, h, x, num_iter):
+    def get_stepsize(self, h, x, num_iter, *args):
         return self.stepsize / np.linalg.norm(h)
     
 class InvIterStepSize(StepSize):
     def __init__(self):
         pass
     
-    def get_stepsize(self, h, x, num_iter):
+    def get_stepsize(self, h, x, num_iter, *args):
         return 1. / num_iter
     
 class ScaledInvIterStepSize(StepSize):
     def __init__(self):
         pass
     
-    def get_stepsize(self, h, x, num_iter):
+    def get_stepsize(self, h, x, num_iter, *args):
         s = 1. / num_iter
         return s / np.linalg.norm(h)
     
@@ -50,7 +50,7 @@ class InvSqrootIterStepSize(StepSize):
     def __init__(self):
         pass
     
-    def get_stepsize(self, h, x, num_iter):
+    def get_stepsize(self, h, x, num_iter, *args):
         return 1. / np.sqrt(num_iter)
     
 class ProjectedArmijo(StepSize):
@@ -90,12 +90,15 @@ class Backtracking(StepSize):
         self.par = kwargs
         if self.rule == "Lipschitz" and "eps" not in self.par:
             self.par["eps"] = 0.
+        if self.rule == "Lipschitz":
+            self._alpha = None
     
-    def assign_function(self, f, grad):
+    def assign_function(self, f, grad, update_x_next):
         self._f = f
         self._grad = grad
+        self._update_x_next = update_x_next
     
-    def get_stepsize(self, h, x, num_iter):
+    def get_stepsize(self, h, x, num_iter, *args):
         alpha = self.par["init_alpha"]
         if self.rule == "Armijo":
             rho = self.par["rho"]
@@ -104,16 +107,18 @@ class Backtracking(StepSize):
             assert rho < 1, "Decay factor has to be less than 1"
             current_grad = self._grad(x)
             current_f = self._f(x)
+            x_next = self._update_x_next(x, alpha, h)
             while True:
-                if np.isnan(self._f(x + alpha * h)):
+                if np.isnan(self._f(x_next)):
                     alpha *= rho
                 else:
-                    if self._f(x + alpha * h) >= current_f + beta * alpha * current_grad.dot(h):
+                    if self._f(x_next) >= current_f + beta * current_grad.dot(x_next - x):
                         alpha *= rho
                     else:
                         break
                 if alpha < 1e-16:
                     break
+                x_next = self._update_x_next(x, alpha, h)
             return alpha
         elif self.rule == "Wolfe":
             rho = self.par["rho"]
@@ -165,19 +170,25 @@ class Backtracking(StepSize):
             current_grad = self._grad(x)
             current_f = self._f(x)
             eps = self.par["eps"]
+            if self._alpha is None:
+                self._alpha = alpha
+            else:
+                self._alpha /= rho
+            x_next = self._update_x_next(x, self._alpha, h)
             while True: 
-                if np.isnan(self._f(x + alpha * h)):
-                    alpha *= rho
+                if np.isnan(self._f(x_next)):
+                    self._alpha *= rho
                 else:
-                    if self._f(x + alpha * h) > current_f + alpha * current_grad.dot(h) + alpha * np.linalg.norm(h)**2 / 2 + eps:
-                        alpha *= rho
+                    if self._f(x_next) > current_f + current_grad.dot(x_next - x) + np.linalg.norm(x_next - x)**2 / (2 * self._alpha) + eps:
+                        self._alpha *= rho
                     else:
                         break
-                if alpha < 1e-10:
+                if self._alpha < 1e-10:
                     break
-            return alpha
+                x_next = self._update_x_next(x, self._alpha, h)
+            return self._alpha
         else:
-            raise NotImplementedError("Available rules for backtracking are 'Armijo', 'Goldstein', 'Wolfe' and 'Wolfe strong'")
+            raise NotImplementedError("Available rules for backtracking are 'Armijo', 'Goldstein', 'Wolfe', 'Wolfe strong' and 'Lipschitz'")
 
 class ExactLineSearch4Quad(StepSize):
     def __init__(self, A, b=None):
