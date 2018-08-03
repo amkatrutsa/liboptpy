@@ -12,7 +12,8 @@ class AcceleratedGD(_base.LineSearchOptimizer):
         self._lam1 = 1
         
     def get_direction(self, x):
-        return -self._grad(x)
+        self._current_grad = self._grad(x)
+        return -self._current_grad
     
     def _update_x_current(self):
         if self._momentum_size is None:
@@ -23,4 +24,4 @@ class AcceleratedGD(_base.LineSearchOptimizer):
         self._x_current = self._x_next + beta * (self._x_next - self.convergence[-1])
         
     def get_stepsize(self):
-        return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence))
+        return self._step_size.get_stepsize(self._h, self.convergence[-1], len(self.convergence))
