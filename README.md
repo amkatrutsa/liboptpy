@@ -1,6 +1,6 @@
 # liboptpy
 
-Python library with implementations of optimization methods
+Library with implementations of optimization methods in Python 3
 
 ## Installing from source 
 
