@@ -1,6 +1,5 @@
 import numpy as np
 from ..base_optimizer import LineSearchOptimizer
-from ..step_size import ProjectedArmijo
 
 class ProjectedGD(LineSearchOptimizer):
     
