@@ -95,7 +95,7 @@ class Backtracking(StepSize):
                 x_next = self._update_x_next(x, alpha, h)
             return alpha
         elif self.rule == "Wolfe":
-            # https://sites.math.washington.edu/~burke/crs/408/notes/nlp/line.pdf aA
+            # https://sites.math.washington.edu/~burke/crs/408/notes/nlp/line.pdf
             rho = self.par["rho"]
             lb = 0
             ub = np.inf
