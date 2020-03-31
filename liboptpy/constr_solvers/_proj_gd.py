@@ -1,6 +1,5 @@
 import numpy as np
 from ..base_optimizer import LineSearchOptimizer
-from ..step_size import ProjectedArmijo
 
 class ProjectedGD(LineSearchOptimizer):
     
@@ -13,12 +12,15 @@ class ProjectedGD(LineSearchOptimizer):
         self._projector = projector
         
     def get_direction(self, x):
-        return -self._grad(x)
+        self._current_grad = self._grad(x)
+        return -self._current_grad
     
     def _f_update_x_next(self, x, alpha, h):
         return self._projector(x + alpha * h)
     
     def check_convergence(self, tol):
+        if len(self.convergence) == 1:
+            return False
         if self._f(self.convergence[-2]) - self._f(self.convergence[-1]) < tol:
             return True
         else:
