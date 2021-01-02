@@ -82,7 +82,8 @@ class LBFGS(_base.LineSearchOptimizer):
         y = self._current_grad - self._grad_mem[-1]
         self._s_hist.append(s)
         self._y_hist.append(y)
-        self._H = y.dot(s) / y.dot(y)
+        if self._H is None or self._s_hist.maxlen <= len(self.convergence) - 1:
+            self._H = y.dot(s) / y.dot(y)
         self._x_current = self._x_next
         
     def _get_result_x(self):
