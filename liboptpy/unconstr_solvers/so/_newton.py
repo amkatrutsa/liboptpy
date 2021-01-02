@@ -8,14 +8,14 @@ class NewtonMethod(_base.LineSearchOptimizer):
         self._linsolver = linsolver
     
     def get_direction(self, x):
-        grad = self._grad(x)
+        self._current_grad = self._grad(x)
         hess = self._hess(x)
         if self._linsolver:
-            h = self._linsolver(hess, -grad)
+            h = self._linsolver(hess, -self._current_grad)
         else:
-            h = _np.linalg.solve(hess, -grad)
+            h = _np.linalg.solve(hess, -self._current_grad)
         return h
     
     def get_stepsize(self):
-        return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence))
+        return self._step_size.get_stepsize(self._h, self.convergence[-1], len(self.convergence))
     

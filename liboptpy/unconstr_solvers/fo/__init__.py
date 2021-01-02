@@ -1,10 +1,10 @@
 from ._gd import GradientDescent
 from ._cg import ConjugateGradientFR
 from ._cg import ConjugateGradientQuad
-from ._bb import BarzilaiBorweinMethod
 from ._acc_gd import AcceleratedGD
 from ._subgrad import SubgradientMethod
 from ._dual_average import DualAveraging
+from ._quasi_newton import BFGS, LBFGS, DFP, BarzilaiBorweinMethod
 
 __all__ = ["BarzilaiBorweinMethod",
            "AcceleratedGD",
@@ -12,4 +12,5 @@ __all__ = ["BarzilaiBorweinMethod",
            "ConjugateGradientFR",
            "ConjugateGradientQuad",
            "SubgradientMethod",
-           "DualAveraging"]
+           "DualAveraging",
+           "BFGS", "LBFGS", "DFP"]

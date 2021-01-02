@@ -13,9 +13,12 @@ class FrankWolfe(LineSearchOptimizer):
         
     def get_direction(self, x):
         s = self._linsolver(self._grad(x))
+        self._current_grad = self._grad(x)
         return s - x
     
     def check_convergence(self, tol):
+        if len(self.convergence) == 1:
+            return False
         if self._f(self.convergence[-2]) - self._f(self.convergence[-1]) < tol:
             return True
         else:

@@ -5,7 +5,8 @@ class GradientDescent(_base.LineSearchOptimizer):
         super().__init__(f, grad, step_size, **kwargs)
     
     def get_direction(self, x):
-        return -self._grad(x)
+        self._current_grad = self._grad(x)
+        return -self._current_grad
     
     def get_stepsize(self):
-        return self._step_size.get_stepsize(self._grad_mem[-1], self.convergence[-1], len(self.convergence))
+        return self._step_size.get_stepsize(self._h, self.convergence[-1], len(self.convergence))

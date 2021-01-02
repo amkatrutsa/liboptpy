@@ -8,16 +8,16 @@ class DualAveraging(_base.LineSearchOptimizer):
         self._sum_lam = 0
         
     def get_direction(self, x):
-        g = self._grad(x)
+        self._current_grad = self._grad(x)
         if len(self.convergence) == 1:
             self._s = _np.zeros(x.shape[0])
-        self._lam = self._dual_step_size.get_stepsize(x, g, len(self.convergence))
-        self._s = (self._sum_lam * self._s + self._lam * g) / (self._sum_lam + self._lam)
+        self._lam = self._dual_step_size.get_stepsize(x, self._current_grad, len(self.convergence))
+        self._s = (self._sum_lam * self._s + self._lam * self._current_grad) / (self._sum_lam + self._lam)
         self._sum_lam += self._lam
         return -self._s
     
     def get_stepsize(self):
-        return self._step_size.get_stepsize(self._grad_mem[-1], self._x_current, len(self.convergence))
+        return self._step_size.get_stepsize(self._h, self._x_current, len(self.convergence))
         
     def _f_update_x_next(self, x, alpha, h):
         return self.convergence[0] + alpha * h
