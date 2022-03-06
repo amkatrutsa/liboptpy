@@ -15,7 +15,27 @@ class ConjugateGradientFR(_base.LineSearchOptimizer):
             h = -self._current_grad
         else:
             self._current_grad = self._grad(self.convergence[-1])
-            beta = self._current_grad.dot(self._current_grad) / self._h.dot(self._h)
+            beta = self._current_grad.dot(self._current_grad) / self._grad_mem[-1].dot(self._grad_mem[-1])
+            h = -self._current_grad + beta * self._h
+        return h
+    
+    def get_stepsize(self):
+        return self._step_size.get_stepsize(self._h, self.convergence[-1], len(self.convergence))
+
+class ConjugateGradientPR(_base.LineSearchOptimizer):
+    def __init__(self, f, grad, step_size, restart=None, **kwargs):
+        super().__init__(f, grad, step_size, **kwargs)
+        if restart is not None:
+            restart.assign_function(f, grad)
+        self._restart = restart
+        
+    def get_direction(self, x):
+        if (len(self.convergence) == 1):
+            self._current_grad = self._grad(x)
+            h = -self._current_grad
+        else:
+            self._current_grad = self._grad(self.convergence[-1])
+            beta = self._current_grad.dot(self._current_grad - self._grad_mem[-1]) / self._grad_mem[-1].dot(self._grad_mem[-1])
             h = -self._current_grad + beta * self._h
         return h
     

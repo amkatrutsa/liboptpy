@@ -1,5 +1,5 @@
 from ._gd import GradientDescent
-from ._cg import ConjugateGradientFR
+from ._cg import ConjugateGradientFR, ConjugateGradientPR
 from ._cg import ConjugateGradientQuad
 from ._acc_gd import AcceleratedGD
 from ._subgrad import SubgradientMethod
@@ -10,6 +10,7 @@ __all__ = ["BarzilaiBorweinMethod",
            "AcceleratedGD",
            "GradientDescent",
            "ConjugateGradientFR",
+           "ConjugateGradientPR",
            "ConjugateGradientQuad",
            "SubgradientMethod",
            "DualAveraging",
